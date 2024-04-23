@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -29,6 +28,9 @@ class User extends Authenticatable implements JWTSubject
         'username',
         'email',
         'password',
+//        'class',
+//        'student',
+//        'position',
     ];
 
     /**

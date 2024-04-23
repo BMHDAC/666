@@ -3,9 +3,13 @@
 namespace App\Consts\Schema;
 use App\Consts\DbTypes;
 
-abstract class DBPostFields
+abstract class DBCommentFields
 {
-	const POST = [
+	const COMMENT = [
+		'status' => [
+			'type' => DbTypes::INT,
+			'cache' => true,
+		],
 		'created_at' => [
 			'type' => DbTypes::STRING,
 			'cache' => true,
@@ -14,15 +18,7 @@ abstract class DBPostFields
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],
-		'media' => [
-			'type' => DbTypes::JSON,
-			'cache' => true,
-		],
-		'status' => [
-			'type' => DbTypes::INT,
-			'cache' => true,
-		],
-		'id_coment' => [
+		'id' => [
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],
@@ -30,11 +26,11 @@ abstract class DBPostFields
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],
-		'id' => [
+		'id_ref' => [
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],
-		'user_id' => [
+		'id_post' => [
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],

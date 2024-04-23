@@ -13,6 +13,10 @@ Route::middleware('auth:api')->group(function () {
         Route::get('gets', "PostController@getPosts");
         Route::post('add', "PostController@AddPost");
     });
+    Route::group(['namespace' => 'Class', 'prefix' => 'class'], function () {
+        Route::get('gets', "ClassController@getClass");
+        Route::post('add', "ClassController@AddClass");
+    });
 
 });
 

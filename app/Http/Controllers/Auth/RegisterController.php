@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 
 use App\Consts\DateFormat;
+use App\Consts\DBRole;
 use App\Consts\Schema\DBUserFields;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -18,8 +19,12 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
+
     public function index(Request $request): JsonResponse
     {
+        /**
+         * @var $user_struct UserStruct
+         */
         $rule = [
             'name'             => 'required|between:3,100',
             'username'         => 'required|between:3,50',
@@ -27,7 +32,9 @@ class RegisterController extends Controller
             'password'         => 'required|between:4,100',
             'confirm'          => 'required|same:password',
             'address'          => 'between:4,100',
-            'DoB'              => 'date',
+//            'student'          => '',
+//            'class'            => '',
+//            'position'         => '',
         ];
 
         $message = [
@@ -82,6 +89,7 @@ class RegisterController extends Controller
                 'password'         => Hash::make($request->input('password')),
                 'created_at'       => now()->format(DateFormat::TIMESTAMP_DB),
                 //                'DoB'        => Carbon::parse($request->input('DoB'))->format('Y-m-d'),
+                'role'             => $request->input("role"),
                 'status'           => 1,
             ];
 
@@ -97,7 +105,10 @@ class RegisterController extends Controller
                 $data_response = $user_struct->toArray([
                     Struct::OPT_IGNORE => [
                         'password'
-                    ]
+                    ],
+                    Struct::OPT_CHANGE => [
+                        'role' => ['getRole']  // process image by function inside struct
+                    ],
                 ]);
 
 //                RegisterEvent::dispatch($id, ['password' => $data['password']]);

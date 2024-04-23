@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Consts\DateFormat;
 use App\Http\Controllers\Controller;
 
 use App\Models\User;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Tymon\JWTAuth\JWTGuard;
 
 
@@ -92,6 +94,8 @@ class AuthController extends Controller
 
     public function me(Request $request): JsonResponse
     {
+//        dd(Str::lower(Str::ulid()->toBase32()));
+//        dd(now()->format(DateFormat::TIMESTAMP_DB));
         if ($this->getUser($request)) {
             $user_struct = $this->user->struct();
         } else {
@@ -106,9 +110,9 @@ class AuthController extends Controller
 
         return resJson([
             'data' => $user_struct->toArray([
-//                Struct::OPT_CHANGE => [
-//                    'image' => ['getImage']  // process image by function inside struct
-//                ],
+                Struct::OPT_CHANGE => [
+                    'role' => ['getRole']  // process image by function inside struct
+                ],
                 Struct::OPT_IGNORE => [
                     'status',
                     'password'

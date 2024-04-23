@@ -3,9 +3,9 @@
 namespace App\Consts\Schema;
 use App\Consts\DbTypes;
 
-abstract class DBUserFields
+abstract class DBStudentFields
 {
-	const USERS = [
+	const STUDENT = [
 		'created_at' => [
 			'type' => DbTypes::STRING,
 			'cache' => true,
@@ -14,31 +14,7 @@ abstract class DBUserFields
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],
-		'status' => [
-			'type' => DbTypes::INT,
-			'cache' => true,
-		],
-		'role' => [
-			'type' => DbTypes::INT,
-			'cache' => true,
-		],
-		'email_verified_at' => [
-			'type' => DbTypes::STRING,
-			'cache' => true,
-		],
-		'remember_token' => [
-			'type' => DbTypes::STRING,
-			'cache' => true,
-		],
-		'id' => [
-			'type' => DbTypes::STRING,
-			'cache' => true,
-		],
-		'image' => [
-			'type' => DbTypes::STRING,
-			'cache' => true,
-		],
-		'username' => [
+		'doB' => [
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],
@@ -46,11 +22,23 @@ abstract class DBUserFields
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],
-		'email' => [
+		'gender' => [
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],
-		'password' => [
+		'id' => [
+			'type' => DbTypes::STRING,
+			'cache' => true,
+		],
+		'id_helper' => [
+			'type' => DbTypes::STRING,
+			'cache' => true,
+		],
+		'id_parent' => [
+			'type' => DbTypes::STRING,
+			'cache' => true,
+		],
+		'id_class' => [
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],

@@ -3,9 +3,9 @@
 namespace App\Consts\Schema;
 use App\Consts\DbTypes;
 
-abstract class DBPostFields
+abstract class DBClassFields
 {
-	const POST = [
+	const CLASSROOM = [
 		'created_at' => [
 			'type' => DbTypes::STRING,
 			'cache' => true,
@@ -14,27 +14,15 @@ abstract class DBPostFields
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],
-		'media' => [
-			'type' => DbTypes::JSON,
-			'cache' => true,
-		],
-		'status' => [
-			'type' => DbTypes::INT,
-			'cache' => true,
-		],
-		'id_coment' => [
-			'type' => DbTypes::STRING,
-			'cache' => true,
-		],
-		'content' => [
-			'type' => DbTypes::STRING,
-			'cache' => true,
-		],
 		'id' => [
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],
-		'user_id' => [
+		'class' => [
+			'type' => DbTypes::STRING,
+			'cache' => true,
+		],
+		'id_teacher' => [
 			'type' => DbTypes::STRING,
 			'cache' => true,
 		],
