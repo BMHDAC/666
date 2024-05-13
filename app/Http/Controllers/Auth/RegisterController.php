@@ -32,9 +32,9 @@ class RegisterController extends Controller
             'password'         => 'required|between:4,100',
             'confirm'          => 'required|same:password',
             'address'          => 'between:4,100',
-//            'student'          => '',
-//            'class'            => '',
-//            'position'         => '',
+            //            'student'          => '',
+            //            'class'            => '',
+            //            'position'         => '',
         ];
 
         $message = [
@@ -77,10 +77,10 @@ class RegisterController extends Controller
                 'error' => firstError($validator->getMessageBag()->toArray())
             ];
         } else {
-//            $image = json_decode($request->input('image'), true);
-//            if ($image) {
-//                $image = array_merge($image, ['cache' => ['200x200']]);
-//            }
+            //            $image = json_decode($request->input('image'), true);
+            //            if ($image) {
+            //                $image = array_merge($image, ['cache' => ['200x200']]);
+            //            }
             $data = [
                 'id'               => Str::lower(Str::ulid()->toBase32()),
                 'name'             => $request->input('name'),
@@ -97,11 +97,11 @@ class RegisterController extends Controller
 
             if ($data) {
                 $user_struct = new UserStruct($data);
-//                if ($user_struct->image) {
-//                    ResMedia::handle($user_struct->image);
-//                }
+                //                if ($user_struct->image) {
+                //                    ResMedia::handle($user_struct->image);
+                //                }
                 User::addUserGetID($data);
-//
+                //
                 $data_response = $user_struct->toArray([
                     Struct::OPT_IGNORE => [
                         'password'
@@ -111,7 +111,7 @@ class RegisterController extends Controller
                     ],
                 ]);
 
-//                RegisterEvent::dispatch($id, ['password' => $data['password']]);
+                //                RegisterEvent::dispatch($id, ['password' => $data['password']]);
                 $json = [
                     'data' => $data_response,
                     'code' => 200,

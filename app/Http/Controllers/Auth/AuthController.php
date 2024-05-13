@@ -54,11 +54,11 @@ class AuthController extends Controller
     public function createSession(Request $request): array
     {
         /**@var $user User */
-//        $user_struct = new UserStruct($this->user_info->getAttributes());
+        //        $user_struct = new UserStruct($this->user_info->getAttributes());
 
         $token = auth()->attempt($request->only('username', 'password'));
 
-//        LoginEvent::dispatch($user_struct->id, $token, StateLogout::ACTIVATE, Carbon::createFromTimestamp($this->guard()->getPayload()->get('exp')));
+        //        LoginEvent::dispatch($user_struct->id, $token, StateLogout::ACTIVATE, Carbon::createFromTimestamp($this->guard()->getPayload()->get('exp')));
 
         $user        = auth()->user();
         $user_struct = $user->struct();
@@ -66,9 +66,9 @@ class AuthController extends Controller
         return [
             'data' => [
                 ...$user_struct->toArray([
-//                    Struct::OPT_CHANGE => [
-//                        'image' => ['getImage']  // process image by function inside struct
-//                    ],
+                    //                    Struct::OPT_CHANGE => [
+                    //                        'image' => ['getImage']  // process image by function inside struct
+                    //                    ],
                     Struct::OPT_IGNORE => [
                         'status',
                         'password'
@@ -94,8 +94,8 @@ class AuthController extends Controller
 
     public function me(Request $request): JsonResponse
     {
-//        dd(Str::lower(Str::ulid()->toBase32()));
-//        dd(now()->format(DateFormat::TIMESTAMP_DB));
+        //        dd(Str::lower(Str::ulid()->toBase32()));
+        //        dd(now()->format(DateFormat::TIMESTAMP_DB));
         if ($this->getUser($request)) {
             $user_struct = $this->user->struct();
         } else {
@@ -141,5 +141,4 @@ class AuthController extends Controller
 
         return $validator;
     }
-
 }

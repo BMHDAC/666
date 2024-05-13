@@ -2,6 +2,7 @@
 
 namespace App\Models\Post;
 
+use App\Structs\Post\PostStruct;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,4 +36,28 @@ class PostModel extends Model
             return $query->paginate($filter['limit'], $filter['fields'], "{$filter['page']}", $filter['page']);
         }
     }
+    public static function doGetById(string $id, array $filter, ?string $ref = null): Model|Builder|null
+    {
+        return self::query()
+            ->where(function ($query) use ($id, $ref) {
+                $query->where('id', $id);
+                if ($ref) {
+                    $query->where('user_id', $ref);
+                }
+            })
+            ->distinct()
+            ->first($filter);
+    }
+    public static function doEdit(array $data, PostModel $post): bool
+    {
+        $post->forceFill($data);
+
+        return $post->save();
+
+    }
+    public function struct(): PostStruct {
+        return new PostStruct ($this->getAttributes());
+    }
+
 }
+

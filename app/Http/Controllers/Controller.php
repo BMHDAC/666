@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post\PostModel;
 use App\Models\User;
+use App\Structs\Post\PostStruct;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
@@ -19,6 +21,7 @@ abstract class Controller  extends BaseController
 
         return $this->user;
     }
+
     protected function _validate(Request $request, ?array $rule = [], ?array $message = []): \Illuminate\Contracts\Validation\Validator|\Illuminate\Validation\Validator
     {
         $validator = Validator::make($request->all(), $rule, $message);
@@ -36,4 +39,5 @@ abstract class Controller  extends BaseController
 
         return $validator;
     }
+
 }
