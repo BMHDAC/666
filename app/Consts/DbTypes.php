@@ -10,3 +10,4 @@ abstract class DbTypes
     const BOOL = 'bool';
     const JSON = 'json';
 }
+

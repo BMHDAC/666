@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Consts\DateFormat;
 use App\Http\Controllers\Controller;
 
 use App\Models\User;
