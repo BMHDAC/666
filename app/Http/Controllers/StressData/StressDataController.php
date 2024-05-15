@@ -8,10 +8,8 @@ use App\Models\Stress_Data;
 use App\Models\User;
 use App\Structs\Stress_Data\StressDataStruct;
 use DateTime;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Test\Constraint\ResponseStatusCodeSame;
 
 class StressDataController extends Controller
 {
@@ -51,7 +49,14 @@ class StressDataController extends Controller
             ], 404);
         }
 
-        $data = Stress_Data::get_by_user_id($user_id);
+        try {
+            $data = Stress_Data::get_by_user_id($user_id);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => $e->getMessage()
+            ]);
+        }
 
         if ($data == null) {
             return response()->json([
@@ -116,7 +121,7 @@ class StressDataController extends Controller
 
         try {
             $found_data = Stress_Data::get_by_user_id_at_date($user_id, $date_time_validator);
-            if ($found_data == null) {
+            if ($found_data->count() == 0) {
                 return response()->json([
                     'status' => 404,
                     'message' => "No data found"
@@ -132,7 +137,7 @@ class StressDataController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => "Data found from user " . $user_id . "at" . $request->input("year") . "-" . $request->input("month") . "-" . $request->input("day"),
+            'message' => "Data found from user " . $user_id . " at " . $request->input("year") . "-" . $request->input("month") . "-" . $request->input("day"),
             'data' => $found_data,
         ]);
     }
