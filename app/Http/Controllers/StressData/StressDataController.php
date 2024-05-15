@@ -20,7 +20,7 @@ class StressDataController extends Controller
      */
     public function index()
     {
-        $data = Stress_Data::all();
+        $data = Stress_Data::get_all();
         if ($data->count() > 0) {
             return response()->json([
                 'status' => 200,

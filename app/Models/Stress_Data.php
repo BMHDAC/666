@@ -43,7 +43,8 @@ class Stress_Data extends Model
         return self::query()
             ->select($select)
             ->distinct()
-            ->first($opts);
+            ->orderBy('datetime', 'desc')
+            ->get();
     }
 
     public static function get_by_user_id(string $id, $select = ['*'], array $opts = []): ?object
