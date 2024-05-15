@@ -56,6 +56,8 @@ class Stress_Data extends Model
         return self::query()
             ->select($select)
             ->where('user_id', $id)
+            ->distinct()
+            ->orderBy('datetime', 'desc')
             ->get();
     }
 
@@ -74,6 +76,7 @@ class Stress_Data extends Model
             ->select($select)
             ->where('user_id', $user_id)
             ->whereDate('datetime', $datetime)
+            ->orderBy('datetime', 'desc')
             ->get();
     }
 

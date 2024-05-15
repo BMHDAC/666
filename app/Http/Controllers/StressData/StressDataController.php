@@ -53,7 +53,7 @@ class StressDataController extends Controller
             ]);
         }
 
-        if ($data == null) {
+        if ($data->count() == 0) {
             return response()->json([
                 'status' => 404,
                 'message' => "No data found"
