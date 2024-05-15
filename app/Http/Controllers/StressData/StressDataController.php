@@ -231,13 +231,12 @@ class StressDataController extends Controller
     {
         $found_data = Stress_Data::get_entry_by_id($id);
 
-        if ($found_data->count() == 0) {
+        if ($found_data == null) {
             return response()->json([
                 'status' => 404,
                 'message' => "No data found"
             ]);
         }
-
         try {
             Stress_Data::delete_entry_by_id($id);
             return response()->json([

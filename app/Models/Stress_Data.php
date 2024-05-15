@@ -13,7 +13,7 @@ class Stress_Data extends Model
 {
     use HasUlids, HasFactory;
 
-
+    public $timestamps = false;
     protected $fillable = [
         "id",
         'user_id',
@@ -78,12 +78,13 @@ class Stress_Data extends Model
 
     public static function get_entry_by_id(string $id)
     {
-        if (!Str::isUlid($id)) {
+        if (Str::isUuid($id) || Str::isUlid($id)) {
+            return self::query()
+                ->where('id', $id)
+                ->first();
+        } else {
             return null;
         };
-        return self::query()
-            ->where('id', $id)
-            ->first();
     }
 
     public static function delete_entry_by_id(string $id)

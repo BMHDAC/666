@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Stress_Data;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,9 +17,11 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name' => 'Test User',
-            "username" => "test",
+            "username" => "test2",
             "password" => "123456",
-            'email' => 'test@example.com',
+            'email' => 'test2@example.com',
         ]);
+
+        Stress_Data::factory()->count(1000)->create();
     }
 }
