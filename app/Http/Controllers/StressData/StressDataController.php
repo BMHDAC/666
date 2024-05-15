@@ -10,6 +10,8 @@ use App\Structs\Stress_Data\StressDataStruct;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
+
 
 class StressDataController extends Controller
 {
@@ -32,13 +34,6 @@ class StressDataController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     public function get_stress_data_by_user_id(string $user_id)
     {
@@ -101,20 +96,23 @@ class StressDataController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 400,
+                'status' => 500,
                 'message' => $validator->errors()
+            ], 500);
+        }
+
+
+        // Validate datetime input : (YYYY-MM-DD)
+        if (checkdate($request->input("month"), $request->input("day"), $request->input("year")) == false) {
+            return response()->json([
+                'status' => 400,
+                'message' => "Invalid date format"
             ], 400);
         }
 
         $date_time_validator = DateTime::createFromFormat('Y-m-d', $request->input("year") . "-" . $request->input("month") . "-" . $request->input("day"));
 
-        // Validate datetime input : (YYYY-MM-DD)
-        if ($date_time_validator == false) {
-            return response()->json([
-                'status' => 400,
-                'message' => "Invalid date format"
-            ]);
-        }
+
 
         // Try query data by date provided
         // Return error status with query exception
@@ -172,24 +170,25 @@ class StressDataController extends Controller
         $validator = $this->_validate($request, $rule, $message);
         if ($validator->fails()) {
             return response()->json([
-                'status' => 400,
+                'status' => 500,
                 'message' => firstError($validator->getMessageBag()->toArray())
-            ], 400);
+            ], 500);
         }
 
         if (User::getUser($request->input("user_id")) == null) {
             return response()->json([
-                'status' => 400,
+                'status' => 404,
                 'message' => 'User Not Found'
-            ], 400);
+            ], 404);
         }
 
-        if (DateTime::createFromFormat('Y-m-d H:i:s', $request->input("datetime")) == false) {
+        if (Carbon::canBeCreatedFromFormat($request->input("datetime"), 'Y-m-d H:i:s') == false) {
             return response()->json([
                 'status' => 400,
                 'message' => 'Invalid Datetime Format'
             ], 400);
         }
+
 
         $data = [
             "id"               => Str::lower(Str::ulid()->toBase32()),
@@ -202,6 +201,14 @@ class StressDataController extends Controller
             "step_count"       => $request->input("step_count"),
             "device_id"        => $request->input("device_id"),
         ];
+        $data = normalizeToRedisViaArray($data, DBStressDataFields::STRESS_DATA);
+
+        if (!$data) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Invalid Data'
+            ], 400);
+        }
 
 
         $stress_data_struct = new StressDataStruct($data);
@@ -214,6 +221,32 @@ class StressDataController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 400,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+
+    public function delete_entry_by_id(string $id)
+    {
+        $found_data = Stress_Data::get_entry_by_id($id);
+
+        if ($found_data->count() == 0) {
+            return response()->json([
+                'status' => 404,
+                'message' => "No data found"
+            ]);
+        }
+
+        try {
+            Stress_Data::delete_entry_by_id($id);
+            return response()->json([
+                'status' => 200,
+                'message' => "Data deleted successfully"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
                 'message' => $e->getMessage()
             ]);
         }

@@ -42,6 +42,10 @@ abstract class DBStressDataFields
         "device_id" => [
             'type' => DbTypes::STRING,
             'cache' => true,
+        ],
+        "prediction" => [
+            'type' => DbTypes::STRING || null,
+            'cache' => true,
         ]
     ];
 }

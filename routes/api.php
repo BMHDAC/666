@@ -11,6 +11,7 @@ Route::group(['namespace' => 'StressData', 'prefix' => 'stressdata'], function (
     Route::post('/', [\App\Http\Controllers\StressData\StressDataController::class, 'post_stress_data']);
     Route::get('/user/{id}', [\App\Http\Controllers\StressData\StressDataController::class, 'get_stress_data_by_user_id']);
     Route::get('/time/{id}', [\App\Http\Controllers\StressData\StressDataController::class, 'get_stress_data_by_user_id_at_date']);
+    Route::delete('/{id}', [\App\Http\Controllers\StressData\StressDataController::class, 'delete_entry_by_id']);
 });
 Route::middleware('auth:api')->group(function () {
     Route::get('/me', "Auth\AuthController@me");

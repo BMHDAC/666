@@ -6,13 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Structs\Stress_Data\StressDataStruct;
 use DateTime;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Support\Str;
 
 class Stress_Data extends Model
 {
-    use HasFactory;
+    use HasUlids, HasFactory;
+
 
     protected $fillable = [
+        "id",
         'user_id',
         'stress_level',
         'datetime',
@@ -31,7 +34,7 @@ class Stress_Data extends Model
     public static function add_stress_data(array $data)
     {
 
-        return self::query()->insert($data);
+        return self::query()->insertGetId($data);
     }
 
     public static function get_all($select = ['*'], array $opts = []): ?object
@@ -71,5 +74,20 @@ class Stress_Data extends Model
             ->where('user_id', $user_id)
             ->whereDate('datetime', $datetime)
             ->get();
+    }
+
+    public static function get_entry_by_id(string $id)
+    {
+        if (!Str::isUlid($id)) {
+            return null;
+        };
+        return self::query()
+            ->where('id', $id)
+            ->first();
+    }
+
+    public static function delete_entry_by_id(string $id)
+    {
+        return self::query()->where('id', $id)->delete();
     }
 }
