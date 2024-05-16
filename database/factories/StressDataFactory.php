@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Stress_Data>
  */
-class Stress_DataFactory extends Factory
+class StressDataFactory extends Factory
 {
     /**
      * Define the model's default state.

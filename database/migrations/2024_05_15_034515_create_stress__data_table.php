@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stress__data', function (Blueprint $table) {
+        Schema::create('stress_data', function (Blueprint $table) {
             $table->string("id")->primary();
             $table->string("user_id");
             $table->foreign("user_id")->references("id")->on("users");
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stress__data');
+        Schema::dropIfExists('stress_data');
     }
 };

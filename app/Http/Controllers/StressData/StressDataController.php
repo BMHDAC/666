@@ -4,7 +4,7 @@ namespace App\Http\Controllers\StressData;
 
 use App\Consts\Schema\DBStressDataFields;
 use App\Http\Controllers\Controller;
-use App\Models\Stress_Data;
+use App\Models\StressData;
 use App\Models\User;
 use App\Structs\Stress_Data\StressDataStruct;
 use DateTime;
@@ -13,6 +13,14 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 
 
+/**
+ * Controller basic structure:
+ * Validating input
+ * Validating found data
+ * Try querying -> Catch Exception
+ * Return response
+ */
+
 class StressDataController extends Controller
 {
     /**
@@ -20,7 +28,7 @@ class StressDataController extends Controller
      */
     public function index()
     {
-        $data = Stress_Data::get_all();
+        $data = StressData::get_all();
         if ($data->count() > 0) {
             return response()->json([
                 'status' => 200,
@@ -45,7 +53,7 @@ class StressDataController extends Controller
         }
 
         try {
-            $data = Stress_Data::get_by_user_id($user_id);
+            $data = StressData::get_by_user_id($user_id);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 500,
@@ -118,7 +126,7 @@ class StressDataController extends Controller
         // Return error status with query exception
 
         try {
-            $found_data = Stress_Data::get_by_user_id_at_date($user_id, $date_time_validator);
+            $found_data = StressData::get_by_user_id_at_date($user_id, $date_time_validator);
             if ($found_data->count() == 0) {
                 return response()->json([
                     'status' => 404,
@@ -213,7 +221,7 @@ class StressDataController extends Controller
 
         $stress_data_struct = new StressDataStruct($data);
         try {
-            Stress_Data::add_stress_data($data);
+            StressData::add_stress_data($data);
             return response()->json([
                 'status' => 200,
                 'data' => $stress_data_struct
@@ -229,7 +237,7 @@ class StressDataController extends Controller
 
     public function delete_entry_by_id(string $id)
     {
-        $found_data = Stress_Data::get_entry_by_id($id);
+        $found_data = StressData::get_entry_by_id($id);
 
         if ($found_data == null) {
             return response()->json([
@@ -238,7 +246,7 @@ class StressDataController extends Controller
             ]);
         }
         try {
-            Stress_Data::delete_entry_by_id($id);
+            StressData::delete_entry_by_id($id);
             return response()->json([
                 'status' => 200,
                 'message' => "Data deleted successfully"

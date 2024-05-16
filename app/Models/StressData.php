@@ -9,7 +9,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Support\Str;
 
-class Stress_Data extends Model
+class StressData extends Model
 {
     use HasUlids, HasFactory;
 

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use App\Models\Stress_Data;
+use App\Models\StressData;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,6 +22,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'test2@example.com',
         ]);
 
-        Stress_Data::factory()->count(1000)->create();
+        StressData::factory()->count(1000)->create();
     }
 }
