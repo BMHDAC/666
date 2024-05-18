@@ -208,6 +208,7 @@ class StressDataController extends Controller
             "average_heart_rate" => $request->input("average_heart_rate"),
             "step_count"       => $request->input("step_count"),
             "device_id"        => $request->input("device_id"),
+            "prediction"        => $request->input("prediction"),
         ];
         $data = normalizeToRedisViaArray($data, DBStressDataFields::STRESS_DATA);
 
@@ -224,7 +225,8 @@ class StressDataController extends Controller
             StressData::add_stress_data($data);
             return response()->json([
                 'status' => 200,
-                'data' => $stress_data_struct
+                'data' => $stress_data_struct,
+                'message' => 'Stress data added successfully'
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -232,6 +234,80 @@ class StressDataController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+
+    public function get_analyzed_data_by_user_id(Request $request, string $user_id)
+    {
+        // Check if the user_id exists
+
+        if (User::getUser($user_id) == null || !$user_id) {
+            return response()->json([
+                "status" => 404,
+                "message" => "User Not Found"
+            ], 404);
+        }
+
+        $rule = [
+            "day" => "required",
+            "month" => "required",
+            "year" => "required",
+        ];
+
+        $message = [
+            "day.required" => trans('v1/default.error_day_required'),
+            "month.required" => trans('v1/default.error_month_required'),
+            "year.required" => trans('v1/default.error_year_required'),
+        ];
+
+        $validator = $this->_validate($request, $rule, $message);
+
+        // Validate input
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 500,
+                'message' => $validator->errors()
+            ], 500);
+        }
+
+
+        // Validate datetime input : (YYYY-MM-DD)
+        if (checkdate($request->input("month"), $request->input("day"), $request->input("year")) == false) {
+            return response()->json([
+                'status' => 400,
+                'message' => "Invalid date format"
+            ], 400);
+        }
+
+        $date_time_validator = DateTime::createFromFormat('Y-m-d', $request->input("year") . "-" . $request->input("month") . "-" . $request->input("day"));
+
+
+
+        // Try query data by date provided
+        // Return error status with query exception
+
+        try {
+            $found_data = StressData::get_analyzed_by_user_id($user_id, $date_time_validator);
+            if ($found_data->count() == 0) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => "No data found"
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+
+
+        return response()->json([
+            'status' => 200,
+            'message' => "Data found from user " . $user_id . " at " . $request->input("year") . "-" . $request->input("month") . "-" . $request->input("day"),
+            'data' => $found_data,
+        ]);
     }
 
 

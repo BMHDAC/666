@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Structs\Stress_Data\StressDataStruct;
 use DateTime;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class StressData extends Model
@@ -37,7 +38,7 @@ class StressData extends Model
         return self::query()->insertGetId($data);
     }
 
-    public static function get_all($select = ['*'], array $opts = []): ?object
+    public static function get_all($select = ['*']): ?object
     {
 
         return self::query()
@@ -47,7 +48,7 @@ class StressData extends Model
             ->get();
     }
 
-    public static function get_by_user_id(string $id, $select = ['*'], array $opts = []): ?object
+    public static function get_by_user_id(string $id, $select = ['*']): ?object
     {
         if (!Str::isUlid($id)) {
             return null;
@@ -63,7 +64,7 @@ class StressData extends Model
 
     // Get all row entry by user id and datetime
 
-    public static function get_by_user_id_at_date(string $user_id, DateTime $datetime, $select = ['*'], array $opts = []): ?object
+    public static function get_by_user_id_at_date(string $user_id, DateTime $datetime): ?object
     {
         if (!Str::isUlid($user_id)) {
             return null;
@@ -72,11 +73,21 @@ class StressData extends Model
         if (!DateTime::createFromFormat('Y-m-d H:i:s', $datetime)) {
             return null;
         }
-        return self::query()
-            ->select($select)
+        return DB::table('stress_data')
+            ->select('*')
             ->where('user_id', $user_id)
             ->whereDate('datetime', $datetime)
-            ->orderBy('datetime', 'desc')
+            ->get();
+    }
+    public static function get_analyzed_by_user_id(string $user_id, DateTime $datetime): ?object
+    {
+        if (!Str::isUlid($user_id)) {
+            return null;
+        };
+        return DB::table('stress_data')
+            ->selectRaw('AVG(average_heart_rate) as average_heart_rate, AVG(step_count) as step_count')
+            ->where('user_id', $user_id)
+            ->whereDate('datetime', $datetime)
             ->get();
     }
 
