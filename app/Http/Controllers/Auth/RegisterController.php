@@ -7,6 +7,7 @@ use App\Consts\DateFormat;
 use App\Consts\DBRole;
 use App\Consts\Schema\DBUserFields;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Firebase\FirebaseController;
 use App\Models\User;
 use App\Structs\Struct;
 use App\Structs\User\UserStruct;
@@ -100,8 +101,9 @@ class RegisterController extends Controller
                 //                if ($user_struct->image) {
                 //                    ResMedia::handle($user_struct->image);
                 //                }
-                User::addUserGetID($data);
-                //
+                $new_user = User::addUserGetID($data);
+                //TODO! Initialize the database index in firebase;
+                /* (new FirebaseController())->set_user_on_register($new_user); */
                 $data_response = $user_struct->toArray([
                     Struct::OPT_IGNORE => [
                         'password'
