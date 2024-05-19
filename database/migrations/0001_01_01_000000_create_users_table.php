@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->integer("role")->default(0);
             $table->integer("status")->default(1);
+            $table->string("fcm_token")->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

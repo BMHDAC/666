@@ -14,6 +14,9 @@ Route::group(['namespace' => 'StressData', 'prefix' => 'stressdata'], function (
     Route::get('time/analyzed/{id}', [\App\Http\Controllers\StressData\StressDataController::class, 'get_analyzed_data_by_user_id']);
     Route::delete('/{id}', [\App\Http\Controllers\StressData\StressDataController::class, 'delete_entry_by_id']);
 });
+Route::group(['namespace' => 'Firebase', 'prefix' => 'firebase'], function () {
+    Route::post('/set', [\App\Http\Controllers\Firebase\FirebaseController::class, 'set_token'])->name('firebase.token');
+});
 Route::middleware('auth:api')->group(function () {
     Route::get('/me', "Auth\AuthController@me");
     Route::group(['namespace' => 'Post', 'prefix' => 'post'], function () {

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -28,9 +29,10 @@ class User extends Authenticatable implements JWTSubject
         'username',
         'email',
         'password',
-//        'class',
-//        'student',
-//        'position',
+        //        'class',
+        //        'student',
+        //        'position',
+        'fcm_token',
     ];
 
     /**
@@ -61,11 +63,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->getKey();
     }
 
-    public function getJWTCustomClaims() : array
+    public function getJWTCustomClaims(): array
     {
         return [];
     }
-    public function struct() :UserStruct
+    public function struct(): UserStruct
     {
         return new UserStruct($this->getAttributes());
     }
@@ -115,5 +117,21 @@ class User extends Authenticatable implements JWTSubject
                     $query->where($key, $value);
                 }
             })->distinct()->first($filter);
+    }
+
+    public static function get_fmc_token(string $user_id): ?string
+    {
+        return DB::table("users")
+            ->select("fcm_token")
+            ->where("id", $user_id)
+            ->distinct()
+            ->get();
+    }
+
+    public static function update_fcm_token(string $user_id, string $fcm_token): bool
+    {
+        return DB::table("users")
+            ->where("id", $user_id)
+            ->update(["fcm_token" => $fcm_token]);
     }
 }
