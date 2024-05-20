@@ -221,6 +221,7 @@ class StressDataController extends Controller
 
 
         $stress_data_struct = new StressDataStruct($data);
+        //TODO! check stress level and notify to other people
         try {
             StressData::add_stress_data($data);
             return response()->json([

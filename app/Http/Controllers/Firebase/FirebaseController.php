@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
+use PhpParser\Error;
 
 class FirebaseController extends Controller
 {
@@ -91,20 +92,40 @@ class FirebaseController extends Controller
     }
     public function send_notification(array $data, string $user_id)
     {
-        $token = User::get_fmc_token($user_id);
+        $token = $this->database->getReference("/user_token/" . $user_id)->getChild("fcm_token");
+
+        if ($token = null || $token == "") {
+            throw new Error("No Token Found In Firebase Database");
+        }
+
         $message = CloudMessage::fromArray([
             'token' => $token,
             'data' => $data
         ]);
-        $this->notification->send($message);
+
+        try {
+            $this->notification->send($message);
+            return true;
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
+
+    //TODO! Broadcasting to others realated users;
+    /* public function broadcast_notifications(array $data, array $user_id_list) */
+    /* { */
+    /* } */
 
     public function set_user_on_register(string $user_id)
     {
-        $this->database->getReference("/user_token/" . $user_id)->set([
-            "fcm_token" => ""
-        ]);
-        return;
+        try {
+            $this->database->getReference("/user_token/" . $user_id)->set([
+                "fcm_token" => ""
+            ]);
+            return true;
+        } catch (\Exception $e) {
+            throw $e;
+        }
         // TODO!: Validate database data was successfully pushed, if not throw error
         // This function is gonna be use during register process
     }

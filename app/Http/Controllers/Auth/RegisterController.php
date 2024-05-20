@@ -21,9 +21,6 @@ class RegisterController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        /**
-         * @var $user_struct UserStruct
-         */
         $rule = [
             'name'             => 'required|between:3,100',
             'username'         => 'required|between:3,50',
@@ -95,13 +92,27 @@ class RegisterController extends Controller
             $data = normalizeToSQLViaArray($data, DBUserFields::USERS);
 
             if ($data) {
+
+                /**
+                 * @var $user_struct UserStruct
+                 */
                 $user_struct = new UserStruct($data);
                 //                if ($user_struct->image) {
                 //                    ResMedia::handle($user_struct->image);
                 //                }
-                $new_user = User::addUserGetID($data);
                 //TODO! Initialize the database index in firebase;
-                (new FirebaseController())->set_user_on_register($new_user);
+                try {
+
+                    (new FirebaseController())->set_user_on_register($data["id"]);
+                    User::addUserGetID($data);
+                } catch (\Exception $e) {
+
+                    return response()->json([
+                        "status" => 500,
+                        "message" => $e->getMessage()
+                    ]);
+                }
+
                 $data_response = $user_struct->toArray([
                     Struct::OPT_IGNORE => [
                         'password'
