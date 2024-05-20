@@ -102,7 +102,7 @@ class FirebaseController extends Controller
     public function set_user_on_register(string $user_id)
     {
         $this->database->getReference("/user_token/" . $user_id)->set([
-            "fcm_token" => null
+            "fcm_token" => ""
         ]);
         return;
         // TODO!: Validate database data was successfully pushed, if not throw error

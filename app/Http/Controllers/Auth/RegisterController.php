@@ -4,14 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 
 use App\Consts\DateFormat;
-use App\Consts\DBRole;
 use App\Consts\Schema\DBUserFields;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Firebase\FirebaseController;
 use App\Models\User;
 use App\Structs\Struct;
 use App\Structs\User\UserStruct;
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -103,7 +101,7 @@ class RegisterController extends Controller
                 //                }
                 $new_user = User::addUserGetID($data);
                 //TODO! Initialize the database index in firebase;
-                /* (new FirebaseController())->set_user_on_register($new_user); */
+                (new FirebaseController())->set_user_on_register($new_user);
                 $data_response = $user_struct->toArray([
                     Struct::OPT_IGNORE => [
                         'password'
