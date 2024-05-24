@@ -128,6 +128,7 @@ class RegisterController extends Controller
                     'code' => 200,
                 ];
             } else {
+                (new FirebaseController())->delete_user($data["id"]);
                 $json = [
                     'code'  => 400, //400,
                     'error' => [

@@ -4,16 +4,19 @@ namespace App\Http\Controllers\Firebase;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Contracts\Filesystem\Cloud;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Kreait\Firebase\Database;
 use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging;
 use Kreait\Firebase\Messaging\CloudMessage;
 use PhpParser\Error;
 
 class FirebaseController extends Controller
 {
-    private $notification;
-    private $database;
+    private Messaging $notification;
+    private Database $database;
 
     public function __construct()
     {
@@ -98,17 +101,15 @@ class FirebaseController extends Controller
             throw new Error("No Token Found In Firebase Database");
         }
 
+        $message = CloudMessage::withTarget('token', $token);
+
         $message = CloudMessage::fromArray([
             'token' => $token,
             'data' => $data
         ]);
 
-        try {
-            $this->notification->send($message);
-            return true;
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        return $this->notification->send($message);
+
     }
 
     //TODO! Broadcasting to others realated users;
@@ -118,15 +119,14 @@ class FirebaseController extends Controller
 
     public function set_user_on_register(string $user_id)
     {
-        try {
-            $this->database->getReference("/user_token/" . $user_id)->set([
+        return $this->database->getReference("/user_token/" . $user_id)->set([
                 "fcm_token" => ""
-            ]);
-            return true;
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        ]);
         // TODO!: Validate database data was successfully pushed, if not throw error
         // This function is gonna be use during register process
+    }
+    public function delete_user(string $user_id)
+    {
+        return $this->database->getReference("/user_token/" . $user_id)->remove();
     }
 }
