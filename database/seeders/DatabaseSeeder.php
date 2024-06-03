@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Statistic;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Models\StressData;
@@ -23,5 +24,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         StressData::factory()->count(1000)->create();
+        Statistic::factory()->count(1000)->create();
     }
 }

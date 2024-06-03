@@ -4,6 +4,7 @@
 use Illuminate\Support\Facades\Route;
 
 //
+Route::get("/statistics", [\App\Http\Controllers\StatisticController::class, "index"]);
 Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'index']);
 Route::post('/login', [\App\Http\Controllers\Auth\AuthController::class, 'index']);
 Route::group(['namespace' => 'StressData', 'prefix' => 'stressdata'], function () {
