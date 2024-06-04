@@ -122,12 +122,10 @@ class FirebaseController extends Controller
         }
         $rule = [
             "user_id" => "required",
-            "data" => "required",
         ];
 
         $message = [
             "user_id.required" => trans('v1/default.error_user_id_required'),
-            "data.required" => trans('v1/default.error_data_required'),
         ];
         $validator = $this->_validate($request, $rule, $message);
         if ($validator->fails()) {
@@ -145,8 +143,8 @@ class FirebaseController extends Controller
             ], 403);
         }
 
-        $title = 'My Notification Title';
-        $body = 'My Notification Body';
+        $title = 'Test Notification';
+        $body = 'Test Notification';
         $imageUrl = 'https://picsum.photos/400/200';
 
         $notification = Notification::fromArray([
