@@ -19,11 +19,11 @@ class StatisticFactory extends Factory
     {
         return [
             'user_id' => User::all()->random()->id,
-            "step_count" => $this->faker->numberBetween(0, 1000),
-            "stair_step_count" => $this->faker->numberBetween(0, 250),
-            "heart_rate" => $this->faker->numberBetween(1, 200),
-            "distance" => $this->faker->randomFloat(0, 0, 1000),
-            "datetime" => $this->faker->dateTimeThisMonth()
+            "step_count" => $this->faker->numberBetween(20, 150),
+            "stair_step_count" => $this->faker->numberBetween(0, 50),
+            "heart_rate" => $this->faker->numberBetween(75, 150),
+            "distance" => $this->faker->randomFloat(0, 0, 400),
+            "datetime" => $this->faker->unique()->dateTimeBetween(startDate: '-4 week')->format("Y-m-d")
         ];
     }
 }

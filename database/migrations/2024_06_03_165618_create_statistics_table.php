@@ -18,7 +18,7 @@ return new class () extends Migration {
             $table ->integer("stair_step_count");
             $table ->float("heart_rate");
             $table ->float("distance");
-            $table ->dateTime("datetime");
+            $table ->date("datetime");
         });
     }
 
