@@ -19,8 +19,8 @@ class StatisticFactory extends Factory
     {
         return [
             'user_id' => User::all()->random()->id,
-            "step_count" => $this->faker->randomNumber(),
-            "stair_step_count" => $this->faker->randomNumber(),
+            "step_count" => $this->faker->numberBetween(0, 1000),
+            "stair_step_count" => $this->faker->numberBetween(0, 250),
             "heart_rate" => $this->faker->numberBetween(1, 200),
             "distance" => $this->faker->randomFloat(0, 0, 1000),
             "datetime" => $this->faker->dateTimeThisMonth()
