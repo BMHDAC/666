@@ -134,9 +134,9 @@ class FirebaseController extends Controller
                 "message" => $validator->errors()
             ]);
         }
-        $token = $this->database->getReference("/user_token/" . $request->input("user_id"))->getChild("fcm_token");
+        $token = $this->database->getReference("/user_token/" . $request->input("user_id"))->getChild("fcm_token")->getValue();
 
-        if (!$token) {
+        if ($token == "" || $token == null) {
             return response()->json([
                 "status" => 403,
                 "message" => "Not Authorized"
