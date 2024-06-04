@@ -19,3 +19,5 @@ yarn-error.log
 /.vscode
 composer.phar
 firebase-services.json
+.php-cs-fixer.cache
+.phpactor.json
