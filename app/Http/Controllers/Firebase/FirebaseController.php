@@ -11,6 +11,7 @@ use Kreait\Firebase\Database;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging;
 use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 use PhpParser\Error;
 
 class FirebaseController extends Controller
@@ -104,12 +105,78 @@ class FirebaseController extends Controller
         $message = CloudMessage::withTarget('token', $token);
 
         $message = CloudMessage::fromArray([
-            'token' => $token,
+            'id' => $user_id,
             'data' => $data
         ]);
 
         return $this->notification->send($message);
 
+    }
+    public function test_notification(Request $request)
+    {
+        if (User::getUser($request->input("user_id")) == null) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'User Not Found'
+            ], 404);
+        }
+        $rule = [
+            "user_id" => "required",
+            "data" => "required",
+        ];
+
+        $message = [
+            "user_id.required" => trans('v1/default.error_user_id_required'),
+            "data.required" => trans('v1/default.error_data_required'),
+        ];
+        $validator = $this->_validate($request, $rule, $message);
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => 503,
+                "message" => $validator->errors()
+            ]);
+        }
+        $token = $this->database->getReference("/user_token/" . $request->input("user_id"))->getChild("fcm_token");
+
+        if (!$token) {
+            return response()->json([
+                "status" => 403,
+                "message" => "Not Authorized"
+            ], 403);
+        }
+
+        $title = 'My Notification Title';
+        $body = 'My Notification Body';
+        $imageUrl = 'https://picsum.photos/400/200';
+
+        $notification = Notification::fromArray([
+            'title' => $title,
+            'body' => $body,
+            'image' => $imageUrl,
+        ]);
+        try {
+            $message = CloudMessage::withTarget('token', $token)
+                ->withNotification($notification);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 500,
+                "message" => "Internal Server Error"
+            ]);
+        }
+
+
+        try {
+            $this->notification->send($message);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 505,
+                "message" => $e->getMessage()
+            ]);
+        }
+        return response()->json([
+            "status" => 200,
+            "message" => "Success"
+        ]);
     }
 
     //TODO! Broadcasting to others realated users;

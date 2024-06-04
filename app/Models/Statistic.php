@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -19,7 +20,20 @@ class Statistic extends Model
         "distance",
     ];
 
-    public static function get_all(): Collection {
-        return DB::table("statistics")->get();
+    public static function get_all(): Collection
+    {
+        return DB::table("statistics")
+            ->select(["*"])
+            ->distinct()
+            ->orderBy("datetime", "desc")
+            ->get();
+    }
+    public static function get_avg_of_user(string $user_id, DateTime $datetime): Collection
+    {
+        return DB::table("statistics")
+            ->selectRaw("AVG(heart_rate) as avg_heart_rate, AVG(step_count) as avg_step_count, AVG(stair_step_count) as avg_stair_steps, AVG(distance) as avg_distance")
+            ->where("user_id", $user_id)
+            ->whereDate("datetime", $datetime)
+            ->get();
     }
 }

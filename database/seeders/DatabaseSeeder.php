@@ -16,12 +16,12 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            "username" => "test2",
-            "password" => "123456",
-            'email' => 'test2@example.com',
-        ]);
+        /* User::factory()->create([ */
+        /*     'name' => 'Test User', */
+        /*     "username" => "test2", */
+        /*     "password" => "123456", */
+        /*     'email' => 'test2@example.com', */
+        /* ]); */
 
         StressData::factory()->count(1000)->create();
         Statistic::factory()->count(1000)->create();

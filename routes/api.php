@@ -4,7 +4,6 @@
 use Illuminate\Support\Facades\Route;
 
 //
-Route::get("/statistics", [\App\Http\Controllers\StatisticController::class, "index"]);
 Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'index']);
 Route::post('/login', [\App\Http\Controllers\Auth\AuthController::class, 'index']);
 Route::group(['namespace' => 'StressData', 'prefix' => 'stressdata'], function () {
@@ -18,6 +17,11 @@ Route::group(['namespace' => 'StressData', 'prefix' => 'stressdata'], function (
 Route::group(['namespace' => 'Firebase', 'prefix' => 'firebase'], function () {
     Route::post('/set', [\App\Http\Controllers\Firebase\FirebaseController::class, 'set_token']);
     Route::put('/set', [\App\Http\Controllers\Firebase\FirebaseController::class, 'update_token']);
+    Route::post("/test/notify", [\App\Http\Controllers\Firebase\FirebaseController::class, 'test_notification']);
+});
+Route::group(["namespace" => "Statistics", "prefix" => "statistics"], function () {
+    Route::get("/", [\App\Http\Controllers\StatisticController::class,"index"]);
+    Route::get("/{id}", [\App\Http\Controllers\StatisticController::class,"get_avg"]);
 });
 Route::middleware('auth:api')->group(function () {
     Route::get('/me', "Auth\AuthController@me");

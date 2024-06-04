@@ -21,8 +21,9 @@ class StatisticFactory extends Factory
             'user_id' => User::all()->random()->id,
             "step_count" => $this->faker->randomNumber(),
             "stair_step_count" => $this->faker->randomNumber(),
-            "heart_rate"=> $this->faker->numberBetween(1,200),
-            "distance" => $this->faker->randomFloat(0,0,1000)
+            "heart_rate" => $this->faker->numberBetween(1, 200),
+            "distance" => $this->faker->randomFloat(0, 0, 1000),
+            "datetime" => $this->faker->dateTimeThisMonth()
         ];
     }
 }

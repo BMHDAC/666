@@ -8,10 +8,10 @@ use App\Models\StressData;
 use App\Models\User;
 use App\Structs\Stress_Data\StressDataStruct;
 use DateTime;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
-
 
 /**
  * Controller basic structure:
@@ -26,7 +26,7 @@ class StressDataController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $data = StressData::get_all();
         if ($data->count() > 0) {
@@ -43,7 +43,7 @@ class StressDataController extends Controller
     }
 
 
-    public function get_stress_data_by_user_id(string $user_id)
+    public function get_stress_data_by_user_id(string $user_id): JsonResponse
     {
         if (User::getUser($user_id) == null) {
             return response()->json([
@@ -75,7 +75,7 @@ class StressDataController extends Controller
         ]);
     }
 
-    public function get_stress_data_by_user_id_at_date(Request $request, $user_id)
+    public function get_stress_data_by_user_id_at_date(Request $request, $user_id): JsonResponse
     {
         // Check if the user_id exists
 
@@ -152,7 +152,7 @@ class StressDataController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function post_stress_data(Request $request)
+    public function post_stress_data(Request $request): JsonResponse
     {
         $rule = [
             'user_id' => 'required',
@@ -238,7 +238,7 @@ class StressDataController extends Controller
     }
 
 
-    public function get_analyzed_data_by_user_id(Request $request, string $user_id)
+    public function get_analyzed_data_by_user_id(Request $request, string $user_id): JsonResponse
     {
         // Check if the user_id exists
 
@@ -312,7 +312,7 @@ class StressDataController extends Controller
     }
 
 
-    public function delete_entry_by_id(string $id)
+    public function delete_entry_by_id(string $id): JsonResponse
     {
         $found_data = StressData::get_entry_by_id($id);
 
