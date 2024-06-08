@@ -4,15 +4,14 @@ namespace App\Http\Controllers\Firebase;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Contracts\Filesystem\Cloud;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Kreait\Firebase\Database;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
-use PhpParser\Error;
 
 class FirebaseController extends Controller
 {
@@ -28,7 +27,7 @@ class FirebaseController extends Controller
         $this->database = $firebase->createDatabase();
     }
 
-    public function set_token(Request $request)
+    public function set_token(Request $request) : Response
     {
         $fcm_token = $request->input("fcm_token");
         if (!$fcm_token) {
@@ -94,22 +93,60 @@ class FirebaseController extends Controller
             "message" => "Token updated"
         ]);
     }
-    public function send_notification(array $data, string $user_id)
+    public function send_notification(array $data, string $user_id, array $notification)
     {
-        $token = $this->database->getReference("/user_token/" . $user_id)->getChild("fcm_token");
+        if ( User::getUser($user_id) == null)  {
+            return ;
+        }
+        $token = $this->database->getReference(path: "/user_token/" . $user_id)->getChild("fcm_token")->getValue();
+        if ($token == null || $token == "") {
+            return;
+        }
+        $title = "To" . $user_id;
+        $body = $notification;
+        $imageUrl = '';
 
-        if ($token = null || $token == "") {
-            throw new Error("No Token Found In Firebase Database");
+        $sending_notification = Notification::fromArray([
+            "title" => $title,
+            "body" => $body,
+            "imageUrl" => $imageUrl
+        ]);
+        try {
+            $message = CloudMessage::withTarget('token', $token)
+                ->withNotification($sending_notification);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 500,
+                "message" => "Internal Server Error"
+            ]);
         }
 
-        $message = CloudMessage::withTarget('token', $token);
 
-        $message = CloudMessage::fromArray([
-            'id' => $user_id,
-            'data' => $data
+        $message;
+        try {
+            $this->notification->send($message);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 505,
+                "message" => $e->getMessage()
+            ]);
+        }
+        return response()->json([
+            "status" => 200,
+            "message" => "Success"
         ]);
 
-        return $this->notification->send($message);
+       /* $token = $this->database->getReference("/user_token/" . $user_id)->getChild("fcm_token"); if ($token = null || $token == "") { */
+        /*     return ; */
+        /* } */
+        /* $message = CloudMessage::withTarget('token', $token); */
+        /**/
+        /* $message = CloudMessage::fromArray([ */
+        /*     'id' => $user_id, */
+        /*     'data' => $data */
+        /* ]); */
+        /**/
+        /* return $this->notification->send($message); */
 
     }
     public function test_notification(Request $request)

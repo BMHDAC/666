@@ -26,7 +26,7 @@ class StressDataController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index() : JsonResponse
     {
         $data = StressData::get_all();
         if ($data->count() > 0) {
